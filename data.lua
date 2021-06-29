@@ -45,10 +45,10 @@ elseif WOW_PROJECT_ID == WOW_PROJECT_CLASSIC or WOW_PROJECT_ID == WOW_PROJECT_BU
 		},
 		["SHAMAN"] = {
 			["EARTH"] = {
-				{ id = 8071, duration = 120 }, -- Earth skin
+				{ id = 8071, duration = 120 }, -- Stoneskin
 				{ id = 2484, duration = 45 }, -- Earth bind
 				{ id = 5730, duration = 15 }, -- Stoneclaw
-				{ id = 8075, duration = 120 }, -- Strenght of Earth
+				{ id = 8075, duration = 120 }, -- Strength of Earth
 				{ id = 8143, duration = 120 }, -- Tremor
 				{ id = 2062, duration = 120 }, -- earth elemental
 			},
@@ -59,6 +59,7 @@ elseif WOW_PROJECT_ID == WOW_PROJECT_CLASSIC or WOW_PROJECT_ID == WOW_PROJECT_BU
 				{ id = 8190, duration = 20 }, -- magma
 				{ id = 8227, duration = 120 }, -- flametongue
 				{ id = 30706, duration = 120 }, -- wrath
+				{ id = 2894, duration = 120 }, -- fire elemental
 			},
 			["WATER"] = {
 				{ id = 5394, duration = 60 }, -- healing stream
