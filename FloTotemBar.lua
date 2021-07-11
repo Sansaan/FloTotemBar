@@ -10,7 +10,7 @@ local VERSION
 if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then
 	VERSION = "8.3.43"
 elseif (WOW_PROJECT_ID == WOW_PROJECT_CLASSIC or WOW_PROJECT_ID == WOW_PROJECT_BURNING_CRUSADE_CLASSIC) then
-	VERSION = "1.13.43"
+	VERSION = "2.0.3"
 end
 
 -------------------------------------------------------------------------------
@@ -37,11 +37,8 @@ local ACTIVE_OPTIONS = FLOTOTEMBAR_OPTIONS[1];
 -- Ugly
 local changingSpec = true;
 
-local GetSpecialization = GetSpecialization;
-if (WOW_PROJECT_ID == WOW_PROJECT_CLASSIC or WOW_PROJECT_ID == WOW_PROJECT_BURNING_CRUSADE_CLASSIC) then
-	GetSpecialization = function ()
-		return 1
-	end
+GetSpecialization = function ()
+  return 1
 end
 
 -------------------------------------------------------------------------------
@@ -68,10 +65,8 @@ function FloTotemBar_OnLoad(self)
 		return;
 	end
 	
-	if (WOW_PROJECT_ID == WOW_PROJECT_CLASSIC or WOW_PROJECT_ID == WOW_PROJECT_BURNING_CRUSADE_CLASSIC) then
-		self.sharedCooldown = true;
-	end
-
+	self.sharedCooldown = true;
+	
 	local thisName = self:GetName();
 	self.totemtype = string.sub(thisName, 7);
 
@@ -88,7 +83,7 @@ function FloTotemBar_OnLoad(self)
 	self.SetupSpell = FloTotemBar_SetupSpell;
 	self.OnSetup = FloTotemBar_OnSetup;
 	self.menuHooks = { SetPosition = FloTotemBar_SetPosition, SetBorders = FloTotemBar_SetBorders };
-	if FLO_CLASS_NAME == "SHAMAN" and (WOW_PROJECT_ID == WOW_PROJECT_CLASSIC or WOW_PROJECT_ID == WOW_PROJECT_BURNING_CRUSADE_CLASSIC) then
+	if FLO_CLASS_NAME == "SHAMAN" then
 		self.menuHooks.SetLayoutMenu = FloTotemBar_SetLayoutMenu;
 		self.slot = _G[self.totemtype.."_TOTEM_SLOT"];
 	end
@@ -103,9 +98,6 @@ function FloTotemBar_OnLoad(self)
 		SlashCmdList["FLOTOTEMBAR"] = FloTotemBar_ReadCmd;
 
 		self:RegisterEvent("ADDON_LOADED");
-		if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then
-			self:RegisterEvent("PLAYER_SPECIALIZATION_CHANGED");
-		end
 		self:RegisterEvent("UNIT_SPELLCAST_INTERRUPTED");
 	end
 	self:RegisterEvent("LEARNED_SPELL_IN_TAB");
@@ -164,9 +156,6 @@ function FloTotemBar_OnEvent(self, event, arg1, ...)
 
 			-- Hook the UIParent_ManageFramePositions function
 			hooksecurefunc("UIParent_ManageFramePositions", FloTotemBar_UpdatePositions);
-			if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then
-				hooksecurefunc("SetSpecialization", function() changingSpec = true; end);
-			end
 		end
 
 		local totemtype = self.totemtype;
@@ -354,38 +343,19 @@ function FloTotemBar_ReadCmd(line)
 end
 
 function FloTotemBar_UpdateTotem(self, slot, idx)
+  if self.slot == slot then
 
-	if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then
-		local haveTotem, totemName, startTime, duration, icon = GetTotemInfo(slot);
-
-		-- Find spell
-		if totemName == "" and self.spells[idx].slot == slot then
-			FloLib_ResetTimer(self, idx);
-		elseif self.spells[idx].name == totemName then
-			self.spells[idx].slot = slot;
-			local countdown = _G[self:GetName().."Countdown"..idx];
-			if countdown then
-				local timeleft = GetTotemTimeLeft(slot);
-
-				countdown:SetMinMaxValues(0, duration);
-				countdown:SetValue(timeleft);
-			end
-		end
-	elseif (WOW_PROJECT_ID == WOW_PROJECT_CLASSIC or WOW_PROJECT_ID == WOW_PROJECT_BURNING_CRUSADE_CLASSIC) then
-		if self.slot == slot then
-
-			local haveTotem, totemName, startTime, duration, icon = GetTotemInfo(slot);
-			local timeleft = GetTotemTimeLeft(slot);
-			local countdown = _G[self:GetName().."Countdown"..idx];
-			if countdown then
-				countdown:SetMinMaxValues(0, duration);
-				countdown:SetValue(timeleft);
-			end
-			if timeleft == 0 then
-				FloLib_ResetTimer(self, idx);
-			end
-		end
-	end
+    local haveTotem, totemName, startTime, duration, icon = GetTotemInfo(slot);
+    local timeleft = GetTotemTimeLeft(slot);
+    local countdown = _G[self:GetName().."Countdown"..idx];
+    if countdown then
+      countdown:SetMinMaxValues(0, duration);
+      countdown:SetValue(timeleft);
+    end
+    if timeleft == 0 then
+      FloLib_ResetTimer(self, idx);
+    end
+  end
 end
 
 function FloTotemBar_CheckTrapLife(self, spellIdx, timestamp, event, hideCaster, sourceGUID, sourceName, sourceFlags, sourceRaidFlags, destGUID, destName, destFlags, destRaidFlags, spellId, spellName, ...)
@@ -495,10 +465,7 @@ function FloTotemBar_UpdatePosition(self)
 		return;
 	end
 
-	local layout
-	if (WOW_PROJECT_ID == WOW_PROJECT_CLASSIC or WOW_PROJECT_ID == WOW_PROJECT_BURNING_CRUSADE_CLASSIC) then
-		layout = FLO_TOTEM_LAYOUTS[ACTIVE_OPTIONS.barLayout];
-	end
+	local layout = FLO_TOTEM_LAYOUTS[ACTIVE_OPTIONS.barLayout];
 
 	self:ClearAllPoints();
 	if self == FloBarEARTH or self == FloBarTRAP or self == FloBarSEAL then
@@ -523,23 +490,18 @@ function FloTotemBar_UpdatePosition(self)
 		end
 
 		if FLO_CLASS_NAME == "HUNTER" then
-            if FloAspectBar ~= nil then
-                self:SetPoint("LEFT", FloAspectBar, "RIGHT", 10/ACTIVE_OPTIONS.scale, 0);
-            else
-			    self:SetPoint("BOTTOMLEFT", anchorFrame, "TOPLEFT", 512/ACTIVE_OPTIONS.scale, (yOffset + yOffset2)/ACTIVE_OPTIONS.scale);
-            end
+      if FloAspectBar ~= nil then
+        self:SetPoint("LEFT", FloAspectBar, "RIGHT", 10/ACTIVE_OPTIONS.scale, 0);
+      else
+        self:SetPoint("BOTTOMLEFT", anchorFrame, "TOPLEFT", 512/ACTIVE_OPTIONS.scale, (yOffset + yOffset2)/ACTIVE_OPTIONS.scale);
+      end
 		elseif FLO_CLASS_NAME == "PALADIN" then
 			self:SetPoint("BOTTOMLEFT", anchorFrame, "TOPLEFT", 320/ACTIVE_OPTIONS.scale, (yOffset + yOffset1)/ACTIVE_OPTIONS.scale);
 		else
-			if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then
-				self:SetPoint("BOTTOMLEFT", anchorFrame, "TOPLEFT", 464, (yOffset + yOffset1)/ACTIVE_OPTIONS.scale);
-			elseif (WOW_PROJECT_ID == WOW_PROJECT_CLASSIC or WOW_PROJECT_ID == WOW_PROJECT_BURNING_CRUSADE_CLASSIC) then
-				local finalOffset = layout.offset * self:GetHeight();
-				self:SetPoint("BOTTOMLEFT", anchorFrame, "TOPLEFT", 164, (yOffset + yOffset1)/ACTIVE_OPTIONS.scale + finalOffset);
-			end
+      local finalOffset = layout.offset * self:GetHeight();
+      self:SetPoint("BOTTOMLEFT", anchorFrame, "TOPLEFT", 164, (yOffset + yOffset1)/ACTIVE_OPTIONS.scale + finalOffset);
 		end
-
-	elseif (WOW_PROJECT_ID == WOW_PROJECT_CLASSIC or WOW_PROJECT_ID == WOW_PROJECT_BURNING_CRUSADE_CLASSIC) and FLO_CLASS_NAME == "SHAMAN" then
+	elseif FLO_CLASS_NAME == "SHAMAN" then
 		self:SetPoint(unpack(layout[self:GetName()]));
 	end
 end
@@ -674,16 +636,14 @@ function FloTotemBar_SetScale(scale)
 end
 
 function FloTotemBar_ResetTimers(self)
-
-        local i;
-        for i = 1, 10 do
-	        self["startTime"..i] = 0;
-        end
+  local i;
+  for i = 1, 10 do
+    self["startTime"..i] = 0;
+  end
 	FloLib_OnUpdate(self);
 end
 
 function FloTotemBar_TimerRed(self, school)
-
 	local countdown = _G[self:GetName().."Countdown"..school];
 	if countdown then
 		countdown:SetStatusBarColor(0.5, 0.5, 0.5);
@@ -698,4 +658,3 @@ end
 function FloTotemBar_OnLeave(self)
 	GameTooltip:Hide();
 end
-
