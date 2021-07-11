@@ -252,23 +252,23 @@ function FloTotemBar_TalentGroupChanged(grp)
 	for k, v in pairs(ACTIVE_OPTIONS.barSettings) do
 		if v.position ~= "auto" then
 			local bar = _G["FloBar"..k];
-                        if bar ~= nil then
-			        v.refPoint = { bar:GetPoint() };
-                        end
+      if bar ~= nil then
+        v.refPoint = { bar:GetPoint() };
+      end
 		end
 	end
 
 	FloTotemBar_CheckTalentGroup(grp);
 	for k, v in pairs(ACTIVE_OPTIONS.barSettings) do
 		local bar = _G["FloBar"..k];
-                if bar ~= nil then
-		        FloLib_Setup(bar);
-		        -- Restore position
-		        if v.position ~= "auto" and v.refPoint then
-			        bar:ClearAllPoints();
-			        bar:SetPoint(unpack(v.refPoint));
-		        end
-			end
+    if bar ~= nil then
+      FloLib_Setup(bar);
+      -- Restore position
+      if v.position ~= "auto" and v.refPoint then
+        bar:ClearAllPoints();
+        bar:SetPoint(unpack(v.refPoint));
+      end
+    end
 	end
 end
 
@@ -288,13 +288,13 @@ function FloTotemBar_CheckTalentGroup(grp)
 	end
 	for k, v in pairs(ACTIVE_OPTIONS.barSettings) do
 		local bar = _G["FloBar"..k];
-                if bar ~= nil then
-		        bar.globalSettings = ACTIVE_OPTIONS;
-		        bar.settings = v;
-		        FloTotemBar_SetPosition(nil, bar, v.position);
-                else
-                        ACTIVE_OPTIONS.barSettings[k] = nil;
-                end
+    if bar ~= nil then
+      bar.globalSettings = ACTIVE_OPTIONS;
+      bar.settings = v;
+      FloTotemBar_SetPosition(nil, bar, v.position);
+    else
+      ACTIVE_OPTIONS.barSettings[k] = nil;
+    end
 	end
 	FloTotemBar_SetScale(ACTIVE_OPTIONS.scale);
 	FloTotemBar_SetBorders(nil, ACTIVE_OPTIONS.borders);
@@ -406,9 +406,9 @@ function FloTotemBar_SetupSpell(self, spell, pos)
 
 	local duration, algo, algoIdx, spellName, spellTexture;
 
-        algoIdx = spell.algo;
-        spellName = spell.name;
-        spellTexture = spell.texture;
+  algoIdx = spell.algo;
+  spellName = spell.name;
+  spellTexture = spell.texture;
 
 	-- Avoid tainting
 	if not InCombatLockdown() then
@@ -442,13 +442,13 @@ function FloTotemBar_OnSetup(self)
 
 	-- Avoid tainting
 	if not InCombatLockdown() then
-	        if next(self.spells) == nil then
-		        UnregisterStateDriver(self, "visibility")
-	        else
-		        local stateCondition = "nopetbattle,nooverridebar,novehicleui,nopossessbar"
-		        RegisterStateDriver(self, "visibility", "["..stateCondition.."] show; hide")
-	        end
-        end
+    if next(self.spells) == nil then
+      UnregisterStateDriver(self, "visibility")
+    else
+      local stateCondition = "nopetbattle,nooverridebar,novehicleui,nopossessbar"
+      RegisterStateDriver(self, "visibility", "["..stateCondition.."] show; hide")
+    end
+  end
 
 	FloTotemBar_ResetTimers(self);
 end
