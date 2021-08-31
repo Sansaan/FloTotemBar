@@ -1,8 +1,8 @@
-## Interface: 20501
+## Interface: 20502
 ## Title: FloTotemBar
 ## Author: Floraline, TBCC updates by Sansaan
 ## Notes: Add some bars for casting of totems/traps, with timers showing the remaining life time of the objects
-## Version: 2.0.3
+## Version: 2.0.4
 ## OptionalDeps: ButtonFacade
 ## Dependencies:
 ## SavedVariables: 
