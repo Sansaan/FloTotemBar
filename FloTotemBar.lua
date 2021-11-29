@@ -623,7 +623,7 @@ function FloTotemBar_SetScale(scale)
 	local setPoints = ACTIVE_OPTIONS.scale ~= scale;
 	ACTIVE_OPTIONS.scale = scale;
 
-	for i, v in ipairs({FloBarTRAP, FloBarEARTH}) do
+	for i, v in ipairs({FloBarTRAP, FloBarEARTH, FloBarFIRE, FloBarAIR, FloBarWATER}) do
 		local p, a, rp, ox, oy = v:GetPoint();
 		local os = v:GetScale();
 		v:SetScale(scale);
