@@ -232,7 +232,7 @@ function FloLib_Setup(self)
 	local button, coutdown;
 	local isKnown, spell;
 	local i = 1;
-	local id, j, n;
+	--local id, j, n;
 
 	self.spells = {};
 
@@ -321,12 +321,12 @@ function FloLib_Setup(self)
 
 			for i=1, NUM_SPELL_SLOTS do
 				button = _G[self:GetName().."Button"..i];
-				countdown = _G[self:GetName().."Countdown"..i];
+				local countdown = _G[self:GetName().."Countdown"..i];
 
 				if self.sharedCooldown and i == 1 then
 					countdown:SetWidth(6);
 				end
-				
+
 				-- Add the button to ButtonFacade
 				if group then
 					group:AddButton(button);
@@ -365,7 +365,6 @@ function FloLib_UpdateState(self)
 	local spell, cooldown, normalTexture, icon;
 	local start, duration, enable, charges, maxCharges, isUsable, noMana;
 	local start2, duration2, enable2;
-	local i;
 
 	for i=1, numSpells do
 
@@ -445,7 +444,6 @@ function FloLib_StartTimer(self, guid, spellid)
 	local founded = false;
 	local name, startTime, duration;
 	local countdown;
-	local i;
 
 	name = GetSpellInfo(spellid)
 
@@ -460,7 +458,7 @@ function FloLib_StartTimer(self, guid, spellid)
 	end
 
 	if founded then
-
+		local i;
 		if self.sharedCooldown then
 			i = 1
 		else
@@ -494,15 +492,14 @@ function FloLib_OnUpdate(self)
 	local countdown;
 	local timeleft;
 	local duration;
-	local name, spell;
-	local i;
+	local name--, spell;
 
 	for i=1, #self.spells do
-
+		local pos
 		name = self:GetName();
 		button = _G[name.."Button"..i];
 
-		spell = self.spells[i];
+		--spell = self.spells[i];
 
 		isActive = false;
 
