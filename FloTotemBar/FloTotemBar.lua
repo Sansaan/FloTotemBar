@@ -37,7 +37,7 @@ local ACTIVE_OPTIONS = FLOTOTEMBAR_OPTIONS[1];
 -- Ugly
 local changingSpec = true;
 
-GetSpecialization = function ()
+local GetSpecialization = function ()
   return 1
 end
 
